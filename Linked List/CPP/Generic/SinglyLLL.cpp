@@ -1,0 +1,333 @@
+#include<iostream>
+using namespace std;
+
+template<class T>
+struct node
+{
+    T data;
+    struct node<T> *next;
+};
+
+template<class T>
+class SinglyLLL
+{
+    private:
+        struct node<T> * first;
+        int iCount = 0;
+
+    public:
+
+        SinglyLLL()
+        {
+            this->first = NULL;
+            this->iCount = 0;
+        }
+
+        void InsertFirst(T no)
+        {
+            struct node<T> * newn = NULL;
+
+            newn = new node<T>;
+
+            newn->data = no;
+            newn->next = NULL;
+
+            if(first == NULL)
+            {
+                first = newn;
+            }
+            else
+            {
+                newn->next = first;
+                first = newn;
+            }
+
+            iCount++;
+        }
+
+        void InsertLast(T no)
+        {
+            struct node<T> * newn = NULL;
+            struct node<T> * temp = NULL;
+
+            newn = new node<T>;
+
+            newn->data = no;
+            newn->next = NULL;
+
+            if(first == NULL)
+            {
+                first = newn;
+            }
+            else
+            {
+                temp = first;
+
+                while(temp->next != NULL)
+                {
+                    temp = temp->next;
+                }
+
+                temp->next = newn;
+            }
+
+            iCount++;
+        }
+
+        void InsertAtPos(T no, int pos)
+        {
+            struct node<T> * newn = NULL;
+            struct node<T> * temp = NULL;
+            int iCnt = 0;
+
+            if((pos < 1) || (pos > iCount + 1))
+            {
+                cout<<"Invalid Position\n";
+                return;
+            }
+
+            if(pos == 1)
+            {
+                InsertFirst(no);
+            }
+            else if(pos == iCount + 1)
+            {
+                InsertLast(no);
+            }
+            else
+            {
+                newn = new node<T>;
+
+                newn->data = no;
+                newn->next = NULL;
+
+                temp = first;
+
+                for(iCnt = 1; iCnt < pos - 1; iCnt++)
+                {
+                    temp = temp->next;
+                }
+
+                newn->next = temp->next;
+                temp->next = newn;
+
+                iCount++;
+            }
+        }
+
+        void DeleteFirst()
+        {
+            struct node<T> * temp = NULL;
+
+            if(first == NULL)
+            {
+                return;
+            }
+            else if(first->next == NULL)
+            {
+                delete first;
+                first = NULL;
+            }
+            else
+            {   
+                temp = first;
+                first = first->next;
+
+                delete temp;
+            }
+            
+            iCount--;
+        }
+
+        void DeleteLast()
+        {
+            struct node<T> * temp = NULL;
+
+            if(first == NULL)
+            {
+                return;
+            }
+            else if(first->next == NULL)
+            {
+                delete first;
+                first = NULL;
+            }
+            else
+            {   
+                temp = first;
+                
+                while(temp->next->next != NULL)
+                {
+                    temp = temp->next;
+                }
+
+                delete temp->next;
+
+                temp->next = NULL;
+            }
+
+            iCount--;
+        }
+
+        void DeleteAtPos(int pos)
+        {
+            struct node<T> * temp = NULL;
+            struct node<T> * target = NULL;
+            int iCnt = 0;
+
+            if((pos < 1) || (pos > iCount))
+            {
+                cout<<"Invalid Position\n";
+                return;
+            }
+
+            if(pos == 1)
+            {
+                DeleteFirst();
+            }
+            else if(pos == iCount)
+            {
+                DeleteLast();
+            }
+            else
+            {
+                temp = first;
+
+                for(iCnt = 1; iCnt < pos - 1; iCnt++)
+                {
+                    temp = temp->next;
+                }
+
+                target = temp->next;
+                temp->next = target->next;
+                
+                delete target;
+
+                iCount--;
+            }
+        }
+
+        void Display()
+        {
+            struct node<T> * temp = NULL;
+
+            temp = first;
+
+            while(temp != NULL)
+            {
+                cout<<"| "<<temp->data<<" | -> ";
+                temp = temp->next;
+            }
+
+            cout<<"NULL\n";
+        }
+
+        int Count()
+        {
+            return iCount;
+        }
+};
+
+int main()
+{
+    SinglyLLL<float> * obj = new SinglyLLL<float>();
+
+    int iChoice = 0;
+    float iValue = 0;
+    int iPos = 0;
+    int iRet = 0;
+
+    cout<<"\n=============================================================\n";
+    cout<<"                    Singly Linear Linked List                 \n";
+    cout<<"=============================================================\n";
+
+    while(1)
+    {
+        cout<<"\n-------------------------------------------------------------\n";
+        cout<<" Please select an option:\n";
+        cout<<"-------------------------------------------------------------\n";
+        cout<<" 1 : Insert new node at first position\n";
+        cout<<" 2 : Insert new node at last position\n";
+        cout<<" 3 : Insert new node at given position\n";
+        cout<<" 4 : Delete the node at first position\n";
+        cout<<" 5 : Delete the node at last position\n";
+        cout<<" 6 : Delete the node at given position\n";
+        cout<<" 7 : Display all elements of LinkedList\n";
+        cout<<" 8 : Count all elements of LinkedList\n";
+        cout<<" 0 : Terminate the application\n";
+        cout<<"-------------------------------------------------------------\n";
+
+        cout<<"Enter your choice : ";
+        cin>>iChoice;
+
+        if(iChoice == 1)
+        {
+            cout<<"Enter the data you want to insert : \n";
+            cin>>iValue;
+
+            obj->InsertFirst(iValue);
+        }
+        else if(iChoice == 2)
+        {
+            cout<<"Enter the data you want to insert : \n";
+            cin>>iValue;
+
+            obj->InsertLast(iValue);
+        }
+        else if(iChoice == 3)
+        {
+            cout<<"Enter the data you want to insert : \n";
+            cin>>iValue;
+
+            cout<<"Enter the position at which you want to insert new node : \n";
+            cin>>iPos;
+
+            obj->InsertAtPos(iValue, iPos);
+        }
+        else if(iChoice == 4)
+        {
+            cout<<"Deleting the first element form LinkedList\n";
+
+            obj->DeleteFirst();
+        }
+        else if(iChoice == 5)
+        {
+            cout<<"Deleting the last element form LinkedList\n";
+
+            obj->DeleteLast();
+        }
+        else if(iChoice == 6)
+        {
+            cout<<"Deleting the element from given position form Linked List\n";
+
+            cout<<"Enter the position at which you want to delete the node : \n";
+            cin>>iPos;
+
+            obj->DeleteAtPos(iPos);
+        }
+        else if(iChoice == 7)
+        {
+            cout<<"\nElements of the Linked List are : \n";
+
+            obj->Display();
+        }
+        else if(iChoice == 8)
+        {
+            iRet = obj->Count();
+            cout<<"\nNumber of elements in the Linked List are : "<<iRet<<"\n";
+        }
+        else if(iChoice == 0)
+        {
+            cout<<"\nThank you for using our application\n";
+            break;
+        }
+        else
+        {
+            cout<<"Invalid Choice\n";
+        }
+
+        cout<<"-------------------------------------------------------------\n";
+    }
+
+    return 0;
+}
